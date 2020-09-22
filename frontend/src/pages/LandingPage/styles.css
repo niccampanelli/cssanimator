@@ -1,0 +1,17 @@
+.wrapDiv{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: minmax(0, 60vh) minmax(0, 40vh);
+}
+
+.timelineSection{
+    width: 100%;
+    height: 100%;
+}
+
+.timeline{
+    background-color: #DADAD9;
+    width: 100%;
+    height: 100%;
+}

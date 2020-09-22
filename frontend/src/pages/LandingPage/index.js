@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import API from '../../services/connection';
+import './styles.css';
 
 export default function LandingPage(){
     const [nome, setNome] = useState("");
@@ -9,16 +10,18 @@ export default function LandingPage(){
     async function sendData(e){
         e.preventDefault();
 
-        window.open(`localhost:3333/criar?conteudo=${content}&filename=${nome}`);
+        const response = await API.get(`/criar?conteudo=${content}&filename=${nome}`);
+        console.log(response);
     }
 
     return (
-        <div>
-            <form onSubmit={sendData}>
-                <input value={nome} onInput={e => {setNome(e.target.value)}} placeholder="Nome"/>
-                <input value={content} onInput={e => {setContent(e.target.value)}} placeholder="Conteúdo"/>
-                <button type="submit">Baixar</button>
-            </form>
+        <div className="wrapDiv">
+            <div></div>
+            <section className="timelineSection">
+                <div className="timeline">
+
+                </div>
+            </section>
         </div>
     );
 }

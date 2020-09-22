@@ -10,13 +10,17 @@ module.exports = {
             if (err) throw err;
             console.log(`${file} foi salvo com sucesso.`);
         });
+        
+        const fileToSend = fs.createReadStream(file);
 
-        return response.download(file, (err) => {
-            if (err) return response.json(`O arquivo não pode ser baixado. Erro: ${err}. Tente novamente`);
-            //else fs.unlink(file, (err) => {
-                //if (err) console.error(`Não foi possível deletar ${file}.`);
+        response.setHeader(`Content-disposition', 'attachment;filename=${file}`);
+
+        //(err) => {
+           // fs.unlink(file, (err) => {
+              //  if (err) console.error(`Não foi possível deletar ${file}.`);
                 //else console.log(`${file} deletado com sucesso.`)
-            //})
-        });
+           /// })
+//return response.json(`O envio terminou.`);
+        //});
     }
 }

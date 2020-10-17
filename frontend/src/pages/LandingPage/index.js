@@ -9,27 +9,36 @@ export default function LandingPage(){
 
     const [editedElement, setEdited] = useState(null);
     const [arrayDeObjetos, setArrayDeObjetos] = useState([]);
+    const [rulerTimestamps, setRulerTimestamps] = useState([]);
 
     window.onload = () => {
+        
+        const screenWidth = window.screen.width;
+
         const timelineSheet = document.querySelector(".timelineSheet");
         //const timelineContainer = document.querySelector(".timelineContainer");
-        //const timelineRuler = document.querySelector(".timelineRuler");
+        const timelineRuler = document.querySelector(".timelineRuler");
+        const timelineRulerDiv = document.querySelector(".timelineRulerDiv");
         //const timelineRulerFrames = document.querySelector(".timelineRulerFrames");
         //const timelineRulerTime = document.querySelector(".timelineRulerTime");
         const timelineObjects = document.querySelector(".timelineObjects");
         const timelineObjectsList = document.querySelector(".timelineObjectsList");
+        const timelineSheetObjects = document.querySelector(".timelineSheetObjects");
+
+        setRulerTimestamps(Array.apply(null, Array(screenWidth)));
 
         console.log(arrayDeObjetos);
 
-        //timelineRulerFrames.style.width = timeline.style.width;
-        timelineObjects.style.width = timelineSheet.style.width;
-        timelineSheet.style.height = timelineObjects.style.width;
+        timelineSheetObjects.style.width = timelineRulerDiv.offsetWidth + "px";
+        timelineObjects.style.height = timelineSheet.style.height;
+        timelineSheet.style.height = timelineObjects.style.height;
 
         timelineObjects.onscroll = () => {
             timelineSheet.scrollTop =  timelineObjects.scrollTop;
         }
         timelineSheet.onscroll = () => {
             timelineObjects.scrollTop =  timelineSheet.scrollTop;
+            timelineRuler.scrollLeft =  timelineSheet.scrollLeft;
         }
 
         //console.log(timelineAttributes.style.height);
@@ -176,13 +185,18 @@ export default function LandingPage(){
                     </div>
                     <div className="timeline">
                         <div className="timelineRuler">
+                            <div className="timelineRulerDiv">
+                                {rulerTimestamps.map((element, index) => (
+                                    <h1 className="timelineRulerTimestamps">{index}</h1>
+                                ))}
+                            </div>
                         </div>
                         <div className="timelineSheet">
-                            <ul className="timelineObjectsList">
+                            <div className="timelineSheetObjects">
                                 {arrayDeObjetos.map(element => (
                                     <li className="timelineObject"></li>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

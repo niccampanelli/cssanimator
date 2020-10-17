@@ -136,7 +136,6 @@
 }
 
 .timelineObjectsList{
-    width: 100%;
     height: auto;
 }
 
@@ -161,9 +160,33 @@
     height: 100%;
     background-color: #e0e5e9;
     border-bottom: .2vh solid #90A4AE;
+    overflow-x: scroll;
+    display: flex;
+    align-self: center;
+    flex-direction: row;
+}
+
+.timelineRulerDiv{
+    height: 100%;
+    display: flex;
+    align-self: center;
+    flex-direction: row;
+}
+
+.timelineRuler::-webkit-scrollbar{
+    display: none;
+}
+
+.timelineRulerTimestamps{
+    min-width: 100px;
+    display: flex;
+    justify-content: flex-end;
+    border-right: .2vh solid black;
+    height: 100%;
 }
 
 .timelineSheet{
+    width: 100%;
     background-color: #f2f6fa;
-    overflow-y: scroll;
+    overflow: scroll;
 }

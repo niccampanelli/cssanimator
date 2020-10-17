@@ -137,9 +137,11 @@
 
 .timelineObjectsList{
     height: auto;
+    padding-bottom: 1.5vh;
 }
 
 .timelineObject{
+    position: relative;
     width: 100%;
     height: 5vh;
     display: flex;
@@ -189,4 +191,11 @@
     width: 100%;
     background-color: #f2f6fa;
     overflow: scroll;
+}
+
+.keyFrame{
+    position: absolute;
+    background-color: red;
+    width: 3vh;
+    height: 70%;
 }

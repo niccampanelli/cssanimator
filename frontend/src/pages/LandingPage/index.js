@@ -115,6 +115,37 @@ export default function LandingPage(){
             el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
             setEdited(el);
         }
+
+        timelineSheetObjects.addEventListener("mousedown", startCounting, false);
+        timelineSheetObjects.addEventListener("touchstart", startCounting, false);
+
+        var clicks = 0;
+        var positionToAdd = 0;
+
+        function startCounting(e){
+            clicks ++;
+            const keyFrameToAdd = document.createElement("div");
+            keyFrameToAdd.className = "keyFrame";
+
+            if(clicks === 2){
+                if (e.type === "touchstart") {
+                    positionToAdd = e.touches[0].clientX;
+                } else {
+                    positionToAdd = e.clientX;
+                }
+
+                keyFrameToAdd.style.left = positionToAdd - timelineObjects.offsetWidth - 10 + "px";
+                e.target.appendChild(keyFrameToAdd);
+
+                console.log(positionToAdd);
+
+            }
+
+            setTimeout(() => {
+                clicks = 0;
+                console.log("zerou");
+            }, 500);
+        }
     }
 
     const addObject = () => {

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 //import { useHistory } from 'react-router-dom';
 //import API from '../../services/connection';
 import { RiRecordCircleLine } from 'react-icons/ri';
-import { FaPlay, FaPlusCircle } from 'react-icons/fa';
+import { FaPlay, FaPlus } from 'react-icons/fa';
 import './styles.css';
 
 export default function LandingPage(){
 
-    const [editedElement, setEdited] = useState(null);
+    //const [editedElement, setEdited] = useState(null);
     const [arrayDeObjetos, setArrayDeObjetos] = useState([]);
     const [rulerTimestamps, setRulerTimestamps] = useState([]);
 
@@ -15,14 +15,11 @@ export default function LandingPage(){
         
         const screenWidth = window.screen.width;
 
+        const timeline = document.querySelector(".timeline");
         const timelineSheet = document.querySelector(".timelineSheet");
-        //const timelineContainer = document.querySelector(".timelineContainer");
         const timelineRuler = document.querySelector(".timelineRuler");
         const timelineRulerDiv = document.querySelector(".timelineRulerDiv");
-        //const timelineRulerFrames = document.querySelector(".timelineRulerFrames");
-        //const timelineRulerTime = document.querySelector(".timelineRulerTime");
         const timelineObjects = document.querySelector(".timelineObjects");
-        const timelineObjectsList = document.querySelector(".timelineObjectsList");
         const timelineSheetObjects = document.querySelector(".timelineSheetObjects");
 
         setRulerTimestamps(Array.apply(null, Array(screenWidth)));
@@ -41,79 +38,134 @@ export default function LandingPage(){
             timelineRuler.scrollLeft =  timelineSheet.scrollLeft;
         }
 
-        //console.log(timelineAttributes.style.height);
-
+        //Element dragging section -----------------------------------------------------------------------------------
         const container = document.getElementById("dragContainer");
         var activeItem = null;
-
         var active = false;
 
+        //Drag event listeners for container elements
         container.addEventListener("touchstart", dragStart, false);
         container.addEventListener("touchend", dragEnd, false);
         container.addEventListener("touchmove", drag, false);
+            container.addEventListener("mousedown", dragStart, false);
+            container.addEventListener("mouseup", dragEnd, false);
+            container.addEventListener("mousemove", drag, false);
 
-        container.addEventListener("mousedown", dragStart, false);
-        container.addEventListener("mouseup", dragEnd, false);
-        container.addEventListener("mousemove", drag, false);
+        //Drag event listeners for timeline keyframes
+        timeline.addEventListener("touchstart", dragStart, false);
+        timeline.addEventListener("touchend", dragEnd, false);
+        timeline.addEventListener("touchmove", drag, false);
+            timeline.addEventListener("mousedown", dragStart, false);
+            timeline.addEventListener("mouseup", dragEnd, false);
+            timeline.addEventListener("mousemove", drag, false);
+
 
         function dragStart(e) {
+            if (e.target !== e.currentTarget) {
+                active = true;
 
-        if (e.target !== e.currentTarget) {
-            active = true;
-            activeItem = e.target;
+                if(e.target.id === "itemToDrag" || e.target.id === "keyFrame" || e.target.id === "timelineCursor"){
+                    activeItem = e.target;
+                }
+                else{
+                    return;
+                }
 
-            if (activeItem !== null) {
-            if (!activeItem.xOffset) {
-                activeItem.xOffset = 0;
-            }
+                if (activeItem !== null) {
+                    if(activeItem.id === "itemToDrag"){
+                        if (!activeItem.xOffset) {
+                            activeItem.xOffset = 0;
+                        }
+    
+                        if (!activeItem.yOffset) {
+                            activeItem.yOffset = 0;
+                        }
+    
+                        if (e.type === "touchstart") {
+                            activeItem.initialX = e.touches[0].clientX - activeItem.xOffset;
+                            activeItem.initialY = e.touches[0].clientY - activeItem.yOffset;
+                        }
+                        else {
+                            activeItem.initialX = e.clientX - activeItem.xOffset;
+                            activeItem.initialY = e.clientY - activeItem.yOffset;
+                        }
+                    }
+                    else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                        if (!activeItem.xOffset) {
+                            activeItem.xOffset = 0;
+                        }
 
-            if (!activeItem.yOffset) {
-                activeItem.yOffset = 0;
+                        if (e.type === "touchstart") {
+                            activeItem.initialX = e.touches[0].clientX - activeItem.xOffset;
+                        }
+                        else {
+                            activeItem.initialX = e.clientX - activeItem.xOffset;
+                        }
+                    }
+                }
+                else{
+                    return;
+                }
             }
-
-            if (e.type === "touchstart") {
-                activeItem.initialX = e.touches[0].clientX - activeItem.xOffset;
-                activeItem.initialY = e.touches[0].clientY - activeItem.yOffset;
-            } else {
-                activeItem.initialX = e.clientX - activeItem.xOffset;
-                activeItem.initialY = e.clientY - activeItem.yOffset;
-            }
-            }
-        }
         }
 
         function dragEnd(e) {
-        if (activeItem !== null) {
-            activeItem.initialX = activeItem.currentX;
-            activeItem.initialY = activeItem.currentY;
-        }
+            if (activeItem !== null) {
+                if(activeItem.id === "itemToDrag"){
+                    activeItem.initialX = activeItem.currentX;
+                    activeItem.initialY = activeItem.currentY;
+                }
+                else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                    activeItem.initialX = activeItem.currentX;
+                }
+            }
 
-        active = false;
-        activeItem = null;
+            active = false;
+            activeItem = null;
         }
 
         function drag(e) {
-        if (active) {
-            if (e.type === "touchmove") {
-            e.preventDefault();
+            if (active) {
+                if(activeItem !== null){
+                    if (e.type === "touchmove") {
+                        e.preventDefault();
 
-            activeItem.currentX = e.touches[0].clientX - activeItem.initialX;
-            activeItem.currentY = e.touches[0].clientY - activeItem.initialY;
-            } else {
-            activeItem.currentX = e.clientX - activeItem.initialX;
-            activeItem.currentY = e.clientY - activeItem.initialY;
+                            if(activeItem.id === "itemToDrag"){
+                                activeItem.currentX = e.touches[0].clientX - activeItem.initialX;
+                                activeItem.currentY = e.touches[0].clientY - activeItem.initialY;
+                            }
+                            else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                                activeItem.currentX = e.touches[0].clientX - activeItem.initialX;
+                            }
+                        }
+                    else {
+                        if(activeItem.id === "itemToDrag"){
+                            activeItem.currentX = e.clientX - activeItem.initialX;
+                            activeItem.currentY = e.clientY - activeItem.initialY;
+                        }
+                        else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                            activeItem.currentX = e.clientX - activeItem.initialX;
+                        }
+                    }
+    
+                    if(activeItem.id === "itemToDrag"){
+                        activeItem.xOffset = activeItem.currentX;
+                        activeItem.yOffset = activeItem.currentY;
+
+                        setTranslate(activeItem.currentX, activeItem.currentY, activeItem);
+                    }
+                    else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                        activeItem.xOffset = activeItem.currentX;
+
+                        setTranslate(activeItem.currentX, 0, activeItem);
+                    }
+                }
             }
-
-            activeItem.xOffset = activeItem.currentX;
-            activeItem.yOffset = activeItem.currentY;
-
-            setTranslate(activeItem.currentX, activeItem.currentY, activeItem);
-        }
         }
 
         function setTranslate(xPos, yPos, el) {
             el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-            setEdited(el);
+            //setEdited(el);
         }
 
         timelineSheetObjects.addEventListener("mousedown", startCounting, false);
@@ -126,6 +178,8 @@ export default function LandingPage(){
             clicks ++;
             const keyFrameToAdd = document.createElement("div");
             keyFrameToAdd.className = "keyFrame";
+            keyFrameToAdd.id = "keyFrame";
+            keyFrameToAdd.draggable = "false";
 
             if(clicks === 2){
                 if (e.type === "touchstart") {
@@ -144,7 +198,7 @@ export default function LandingPage(){
             setTimeout(() => {
                 clicks = 0;
                 console.log("zerou");
-            }, 500);
+            }, 1000);
         }
     }
 
@@ -198,12 +252,12 @@ export default function LandingPage(){
                                     REC
                                 </button>
                                 <button className="timelineOptionsPlayButton">
-                                    <FaPlay className="timelineOptionsPlay" color="#7a8c93"/>
-                                    PLAY
+                                    <FaPlay className="timelineOptionsPlay" color="#ffffff"/>
+                                    Play
                                 </button>
                             </div>
                                 <button onClick={addObject} className="timelineOptionsAddButton">
-                                    <FaPlusCircle className="timelineOptionsAdd" color="#7a8c93"/>
+                                    <FaPlus className="timelineOptionsAdd" color="#20A4F3"/>
                                 </button>
                             <div className="timelineOptionsRuler">
                                 <h1 className="timelineOptionsRulerLabel">Segundos: </h1>
@@ -224,6 +278,7 @@ export default function LandingPage(){
                         </div>
                         <div className="timelineSheet">
                             <div className="timelineSheetObjects">
+                                <div className="timelineCursor" id="timelineCursor"></div>
                                 {arrayDeObjetos.map(element => (
                                     <li className="timelineObject"></li>
                                 ))}

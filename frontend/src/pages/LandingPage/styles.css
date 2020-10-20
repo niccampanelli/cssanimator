@@ -6,14 +6,14 @@
 }
 
 .exampleItem{
-    background-color: rgb(25, 0, 255);
+    background-color: #209bd1ff;
     position: absolute;
     width: 200px;
     height: 200px;
 }
 
 #itemToDrag{
-    cursor: move;
+    cursor: grab;
 }
 
 .timelineSection{
@@ -40,10 +40,10 @@
 .timelineOptions{
     width: 100%;
     height: 100%;
-    background-color: #CFD8DC;
+    background-color: #dbf4ff;
     display: grid;
     grid-template-columns: minmax(0, 50%) minmax(0, 20%) minmax(0, 30%);
-    border-bottom: .2vh solid #90A4AE;
+    border-bottom: .2vh solid #81a0ad;
 }
 
 .timelineOptionsButtons{
@@ -51,7 +51,6 @@
     height: 100%;
     display: grid;
     grid-template-columns: minmax(0, 50%) minmax(0, 50%);
-    border-right: .23vh solid #90A4AE;
     gap: 1.5vh;
     padding: 1vh 1.5vh;
 }
@@ -62,9 +61,9 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    background-color: red;
+    background-color: #ff5959;
     border-radius: 1vh;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     color: #ffffff;
 }
@@ -81,11 +80,12 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    background-color: #ffffff;
+    background-color: #20A4F3;
     border-radius: 1vh;
-    font-weight: bold;
+    font-weight: 600;
+    font-kerning: 10pt;
     cursor: pointer;
-    color: #5c6f77;
+    color: #ffffff;
 }
 
 .timelineOptionsPlay{
@@ -103,7 +103,7 @@
     background-color: transparent;
     font-weight: bold;
     cursor: pointer;
-    color: #5c6f77;
+    color: #20A4F3;
 }
 
 .timelineOptionsAdd{
@@ -131,7 +131,7 @@
 }
 
 .timelineObjects{
-    background-color: #CFD8DC;
+    background-color: #AAFFE5;
     overflow-y: scroll;
 }
 
@@ -146,11 +146,12 @@
     height: 5vh;
     display: flex;
     align-items: center;
-    border-bottom: .23vh solid #90A4AE;
+    border-bottom: .23vh solid #81a0ad;
     padding: 0 2vh;
 }
 
 .timeline{
+    position: relative;
     width: 100%;
     height: 100%;
     display: grid;
@@ -161,7 +162,7 @@
     width: 100%;
     height: 100%;
     background-color: #e0e5e9;
-    border-bottom: .2vh solid #90A4AE;
+    border-bottom: .3vh solid #9eb2bb;
     overflow-x: scroll;
     display: flex;
     align-self: center;
@@ -182,20 +183,77 @@
 .timelineRulerTimestamps{
     min-width: 100px;
     display: flex;
+    align-self: flex-end;
+    align-items: flex-end;
+    vertical-align: bottom;
     justify-content: flex-end;
-    border-right: .2vh solid black;
-    height: 100%;
+    border-right: .3vh solid #9eb2bb;
+    padding-right: 1vh;
+    padding-bottom: .5vh;
+    color: #99b2bd;
+    font-weight: 700;
+    font-size: 2.5vh;
+    height: 80%;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
 }
 
 .timelineSheet{
     width: 100%;
     background-color: #f2f6fa;
     overflow: scroll;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+}
+
+.timelineCursor{
+    cursor: pointer;
+    position: absolute;
+    height: 100%;
+    background-color: turquoise;
+    z-index: 5;
+    width: .5vh;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
 }
 
 .keyFrame{
+    cursor: pointer;
     position: absolute;
-    background-color: red;
-    width: 3vh;
-    height: 70%;
+    background-image: url("./keyframe.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    width: 4.4vh;
+    height: 90%;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
 }

@@ -14,6 +14,35 @@ body{
     overflow: hidden;
 }
 
+.contextMenu{
+    background-color: #ffffff;
+    box-shadow: 0 .3vh .6vh .3vh #0000002a;
+    display: grid;
+    height: 4vh;
+    position: absolute;
+    z-index: 100;
+}
+
+.contextMenuButton{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 4vh) auto;
+    align-items: center;
+    justify-items: center;
+}
+
+.contextMenuButtonText{
+    width: 100%;
+    padding-left: 1vh;
+    margin-right: 1vh;
+    text-align: left;
+}
+
+.contextMenuButton:hover{
+    background-color: #e9e9e9;
+}
+
 ::-webkit-scrollbar {
     width: 1vh;
     height: 1.5vh;

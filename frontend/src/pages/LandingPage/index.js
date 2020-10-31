@@ -2,14 +2,20 @@ import React, { useState } from 'react';
 //import { useHistory } from 'react-router-dom';
 //import API from '../../services/connection';
 import { RiRecordCircleLine } from 'react-icons/ri';
-import { FaPlay, FaPlus } from 'react-icons/fa';
+import { FaPlay, FaPlus, FaTrash } from 'react-icons/fa';
 import './styles.css';
 
 export default function LandingPage(){
 
     //const [editedElement, setEdited] = useState(null);
+    const [animationData, setAnimationDataValues] = useState([]);
+
+    const [selectedElement, setSelectedElement] = useState("");
     const [arrayDeObjetos, setArrayDeObjetos] = useState([]);
     const [rulerTimestamps, setRulerTimestamps] = useState([]);
+    const [contextMenuEnabled, openContextMenu] = useState(false);
+
+    window.addEventListener("keyup", deleteSelectedElement, true);
 
     window.onload = () => {
         
@@ -21,6 +27,7 @@ export default function LandingPage(){
         const timelineRulerDiv = document.querySelector(".timelineRulerDiv");
         const timelineObjects = document.querySelector(".timelineObjects");
         const timelineSheetObjects = document.querySelector(".timelineSheetObjects");
+
 
         setRulerTimestamps(Array.apply(null, Array(screenWidth)));
 
@@ -168,58 +175,117 @@ export default function LandingPage(){
             //setEdited(el);
         }
 
-        timelineSheetObjects.addEventListener("mousedown", startCounting, false);
-        timelineSheetObjects.addEventListener("touchstart", startCounting, false);
+        timelineSheetObjects.addEventListener("mousedown", watchKeyframe, false);
+        timelineSheetObjects.addEventListener("touchstart", watchKeyframe, false);
+        timelineSheetObjects.addEventListener("contextmenu", watchKeyframe, false);
 
         var clicks = 0;
         var positionToAdd = 0;
 
-        function startCounting(e){
+        function watchKeyframe(e){
             clicks ++;
             const keyFrameToAdd = document.createElement("div");
+
             keyFrameToAdd.className = "keyFrame";
             keyFrameToAdd.id = "keyFrame";
             keyFrameToAdd.draggable = "false";
 
-            if(clicks === 2){
-                if (e.type === "touchstart") {
-                    positionToAdd = e.touches[0].clientX;
-                } else {
-                    positionToAdd = e.clientX;
+            if(e.target.id === "keyFrame"){
+                setSelectedElement(e.target);
+                
+                if(e.type === "contextmenu"){
+                    if(contextMenuEnabled === false){
+                        openContextMenu(true);
+                        const contextMenu = document.getElementById("contextMenu");
+                        contextMenu.style.left = e.target.getBoundingClientRect().left + (e.target.offsetHeight/2) + "px";
+                        contextMenu.style.top = e.target.getBoundingClientRect().top + (e.target.offsetWidth/2) + "px";
+    
+                        document.addEventListener('mouseup', enableContextMenu, false);
+                        
+                        function enableContextMenu() {
+                            setTimeout(() => {
+                                openContextMenu(false);
+                            }, 10);
+
+                            document.removeEventListener('mouseup', enableContextMenu, false);
+                        }
+
+                    }
+
+                    e.preventDefault();
                 }
 
-                keyFrameToAdd.style.left = positionToAdd - timelineObjects.offsetWidth - 10 + "px";
-                e.target.appendChild(keyFrameToAdd);
+            }
 
-                console.log(positionToAdd);
+            if(clicks === 2){
+                if(e.target.className === "timelineObject"){
+                    if (e.type === "touchstart") {
+                        var xTouch = e.touches[0].clientX - e.target.offsetLeft + timelineSheet.scrollLeft;
+                        positionToAdd = xTouch - timelineObjects.offsetWidth;
+                    } else {
+                        var x = e.clientX - e.target.offsetLeft + timelineSheet.scrollLeft;
+                        positionToAdd = x - timelineObjects.offsetWidth;
+                    }
+    
+                    keyFrameToAdd.style.left = positionToAdd - 10 + "px";
+                    e.target.appendChild(keyFrameToAdd);
 
+                    const animData = {
+                        [`affectedObject${e.target.id}`]: {
+                            'affectedObjectID': e.target.id,
+                            'affectedProperty': {
+                                'name': "",
+                                'value': 0
+                            },
+                            'time': positionToAdd/100
+                        }
+                    };
+                    setAnimationDataValues(animationData => [...animationData, animData]);
+                }
             }
 
             setTimeout(() => {
                 clicks = 0;
-                console.log("zerou");
-            }, 1000);
+            }, 500);
         }
     }
 
-    const addObject = () => {
+    function deleteSelectedElement(event){
+        if(event === "contextmenu"){
+            if(selectedElement !== "" && selectedElement !== null && selectedElement !== undefined){
+                selectedElement.remove();
+            }
+        }
+
+        if(event.key === 'Del' || event.key === 'Delete' || event.keyCode === 46){
+            if(selectedElement !== "" && selectedElement !== null && selectedElement !== undefined){
+                selectedElement.remove();
+            }
+        }
+    }
+
+    const addObject = (e) => {
         const timelineObjectsList = document.querySelector(".timelineObjectsList");
         const line = document.createElement("li");
         var lastElementID;
 
         if(timelineObjectsList.lastChild !== null){
-            lastElementID = (parseInt(timelineObjectsList.lastChild.id) + 1).toString();
+            lastElementID = parseInt((timelineObjectsList.lastChild.id.toString()).substring(6, 8)) + 1;
         }
         else{
             lastElementID = "1";
         }
 
-        line.innerHTML = "Objeto" + lastElementID;
+        line.innerHTML = "Objeto " + lastElementID;
         line.className = "timelineObject";
-        line.setAttribute("id", lastElementID);
+        line.id = "objeto" + lastElementID;
 
         timelineObjectsList.appendChild(line);
         setArrayDeObjetos(Array.apply(null, Array(timelineObjectsList.childElementCount)));
+    }
+
+    function playAnim(){
+        console.log(animationData);
     }
 
     //async function sendData(e){
@@ -239,6 +305,12 @@ export default function LandingPage(){
 
     return (
         <div className="wrapDiv">
+            { contextMenuEnabled ? 
+                <div className="contextMenu" id="contextMenu">
+                    <button className="contextMenuButton" onClick={e => deleteSelectedElement("contextmenu")}> <FaTrash size={"1.8vh"} color={"#999"}/> <h1 className="contextMenuButtonText">Excluir</h1></button>
+                </div> :
+                 ""
+            }
             <div id="dragContainer">
                 <div className="exampleItem" id="itemToDrag"></div>
             </div>
@@ -251,7 +323,7 @@ export default function LandingPage(){
                                     <RiRecordCircleLine className="timelineOptionsRecord" color="white"/>
                                     REC
                                 </button>
-                                <button className="timelineOptionsPlayButton">
+                                <button onClick={playAnim} className="timelineOptionsPlayButton">
                                     <FaPlay className="timelineOptionsPlay" color="#ffffff"/>
                                     Play
                                 </button>
@@ -272,15 +344,15 @@ export default function LandingPage(){
                         <div className="timelineRuler">
                             <div className="timelineRulerDiv">
                                 {rulerTimestamps.map((element, index) => (
-                                    <h1 className="timelineRulerTimestamps">{index}</h1>
+                                    <h1 className="timelineRulerTimestamps" key={index}>{index + 1}</h1>
                                 ))}
                             </div>
                         </div>
                         <div className="timelineSheet">
                             <div className="timelineSheetObjects">
                                 <div className="timelineCursor" id="timelineCursor"></div>
-                                {arrayDeObjetos.map(element => (
-                                    <li className="timelineObject"></li>
+                                {arrayDeObjetos.map((element, index) => (
+                                    <li className="timelineObject" key={"obj" + index + 1} id={index + 1}></li>
                                 ))}
                             </div>
                         </div>

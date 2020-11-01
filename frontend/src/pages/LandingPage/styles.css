@@ -6,7 +6,7 @@
 }
 
 .exampleItem{
-    background-color: #209bd1ff;
+    background-color: #0084ff;
     position: absolute;
     width: 200px;
     height: 200px;
@@ -38,12 +38,13 @@
 }
 
 .timelineOptions{
+    position: relative;
+    z-index: 5;
     width: 100%;
     height: 100%;
-    background-color: #dbf4ff;
+    background-color: #ffffff;
     display: grid;
     grid-template-columns: minmax(0, 50%) minmax(0, 20%) minmax(0, 30%);
-    border-bottom: .2vh solid #81a0ad;
 }
 
 .timelineOptionsButtons{
@@ -61,9 +62,9 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    background-color: #ff5959;
+    background-color: #ff1908;
     border-radius: 1vh;
-    font-weight: 600;
+    font-weight: 800;
     cursor: pointer;
     color: #ffffff;
 }
@@ -80,21 +81,21 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    background-color: #20A4F3;
+    background-color: #0084ff;
     border-radius: 1vh;
-    font-weight: 600;
+    font-weight: 800;
     font-kerning: 10pt;
     cursor: pointer;
     color: #ffffff;
 }
 
 .timelineOptionsPlay{
-    height: 50%;
+    height: 45%;
     stroke-width: .3vh;
     width: auto;
 }
 
-.timelineOptionsAddButton{
+.timelineOptionsAddField{
     height: 100%;
     width: 100%;
     display: flex;
@@ -102,8 +103,25 @@
     justify-content: space-evenly;
     background-color: transparent;
     font-weight: bold;
+    padding: 1vh 0;
+}
+
+.timelineOptionsAddButton{
+    background-color: #0084ff;
     cursor: pointer;
-    color: #20A4F3;
+    border-radius: 100vh;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-weight: bold;
+}
+
+.timelineOptionsAddButton svg{
+    fill: #fff;
+    stroke: white;
+    stroke-width: 10vh;
 }
 
 .timelineOptionsAdd{
@@ -119,10 +137,11 @@
 .timelineOptionsRuler{
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    padding-bottom: .8vh;
     text-align: right;
-    padding-right: 1vh;
-    color: #5c6f77;
+    padding-right: 2vh;
+    color: #0173dd;
 }
 
 .timelineOptionsRulerLabel{
@@ -131,7 +150,7 @@
 }
 
 .timelineObjects{
-    background-color: #AAFFE5;
+    background-color: #ffffff;
     overflow-y: scroll;
 }
 
@@ -143,10 +162,10 @@
 .timelineObject{
     position: relative;
     width: 100%;
-    height: 5vh;
+    height: 7vh;
     display: flex;
     align-items: center;
-    border-bottom: .23vh solid #81a0ad;
+    border-bottom: .23vh solid #b9b9b9;
     padding: 0 2vh;
 }
 
@@ -159,10 +178,11 @@
 }
 
 .timelineRuler{
+    position: relative;
+    z-index: 2;
     width: 100%;
     height: 100%;
-    background-color: #e0e5e9;
-    border-bottom: .3vh solid #9eb2bb;
+    background-color: #f2f2f2;
     overflow-x: scroll;
     display: flex;
     align-self: center;
@@ -187,13 +207,13 @@
     align-items: flex-end;
     vertical-align: bottom;
     justify-content: flex-end;
-    border-right: .3vh solid #9eb2bb;
+    border-right: .45vh solid #0084ff;
     padding-right: 1vh;
     padding-bottom: .5vh;
-    color: #99b2bd;
+    color: #0084ff;
     font-weight: 700;
     font-size: 2.5vh;
-    height: 80%;
+    height: 60%;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -207,7 +227,7 @@
 
 .timelineSheet{
     width: 100%;
-    background-color: #f2f6fa;
+    background-color: #f2f2f2;
     overflow: scroll;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -223,10 +243,15 @@
 .timelineCursor{
     cursor: pointer;
     position: absolute;
+    z-index: 3;
+    bottom: 0;
     height: 100%;
-    background-color: turquoise;
+    background-image: url("./cursor.svg");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
     z-index: 5;
-    width: .5vh;
+    width: 3vh;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -246,7 +271,7 @@
     background-position: center center;
     background-size: contain;
     width: 4.4vh;
-    height: 90%;
+    height: 65%;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 //import { useHistory } from 'react-router-dom';
 //import API from '../../services/connection';
+import { HiOutlineTrash } from 'react-icons/hi';
 import { RiRecordCircleLine } from 'react-icons/ri';
-import { FaPlay, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaPlay, FaPlus } from 'react-icons/fa';
 import './styles.css';
 
 export default function LandingPage(){
@@ -31,8 +32,6 @@ export default function LandingPage(){
 
         setRulerTimestamps(Array.apply(null, Array(screenWidth)));
 
-        console.log(arrayDeObjetos);
-
         timelineSheetObjects.style.width = timelineRulerDiv.offsetWidth + "px";
         timelineObjects.style.height = timelineSheet.style.height;
         timelineSheet.style.height = timelineObjects.style.height;
@@ -46,7 +45,7 @@ export default function LandingPage(){
         }
 
         //Element dragging section -----------------------------------------------------------------------------------
-        const container = document.getElementById("dragContainer");
+        const container = document.getElementById("userPageWrap");
         var activeItem = null;
         var active = false;
 
@@ -71,7 +70,7 @@ export default function LandingPage(){
             if (e.target !== e.currentTarget) {
                 active = true;
 
-                if(e.target.id === "itemToDrag" || e.target.id === "keyFrame" || e.target.id === "timelineCursor"){
+                if(e.target.id === "itemToDrag" || e.target.id.toString().substring(0, 8) === "keyFrame" || e.target.id === "timelineCursor"){
                     activeItem = e.target;
                 }
                 else{
@@ -97,7 +96,7 @@ export default function LandingPage(){
                             activeItem.initialY = e.clientY - activeItem.yOffset;
                         }
                     }
-                    else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                    else if(activeItem.id.toString().substring(0, 8) === "keyFrame" || activeItem.id === "timelineCursor"){
                         if (!activeItem.xOffset) {
                             activeItem.xOffset = 0;
                         }
@@ -122,7 +121,7 @@ export default function LandingPage(){
                     activeItem.initialX = activeItem.currentX;
                     activeItem.initialY = activeItem.currentY;
                 }
-                else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                else if(activeItem.id.toString().substring(0, 8) === "keyFrame" || activeItem.id === "timelineCursor"){
                     activeItem.initialX = activeItem.currentX;
                 }
             }
@@ -141,7 +140,7 @@ export default function LandingPage(){
                                 activeItem.currentX = e.touches[0].clientX - activeItem.initialX;
                                 activeItem.currentY = e.touches[0].clientY - activeItem.initialY;
                             }
-                            else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                            else if(activeItem.id.toString().substring(0, 8) === "keyFrame" || activeItem.id === "timelineCursor"){
                                 activeItem.currentX = e.touches[0].clientX - activeItem.initialX;
                             }
                         }
@@ -150,7 +149,7 @@ export default function LandingPage(){
                             activeItem.currentX = e.clientX - activeItem.initialX;
                             activeItem.currentY = e.clientY - activeItem.initialY;
                         }
-                        else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                        else if(activeItem.id.toString().substring(0, 8) === "keyFrame" || activeItem.id === "timelineCursor"){
                             activeItem.currentX = e.clientX - activeItem.initialX;
                         }
                     }
@@ -161,7 +160,7 @@ export default function LandingPage(){
 
                         setTranslate(activeItem.currentX, activeItem.currentY, activeItem);
                     }
-                    else if(activeItem.id === "keyFrame" || activeItem.id === "timelineCursor"){
+                    else if(activeItem.id.toString().substring(0, 8) === "keyFrame" || activeItem.id === "timelineCursor"){
                         activeItem.xOffset = activeItem.currentX;
 
                         setTranslate(activeItem.currentX, 0, activeItem);
@@ -172,7 +171,6 @@ export default function LandingPage(){
 
         function setTranslate(xPos, yPos, el) {
             el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-            //setEdited(el);
         }
 
         timelineSheetObjects.addEventListener("mousedown", watchKeyframe, false);
@@ -186,13 +184,15 @@ export default function LandingPage(){
             clicks ++;
             const keyFrameToAdd = document.createElement("div");
 
+            const keyframesCount = document.querySelectorAll('.keyFrame').length;
+
             keyFrameToAdd.className = "keyFrame";
-            keyFrameToAdd.id = "keyFrame";
+            keyFrameToAdd.id = `keyFrame${keyframesCount + 1}`;
             keyFrameToAdd.draggable = "false";
 
-            if(e.target.id === "keyFrame"){
+            if(e.target.id.toString().substring(0, 8) === "keyFrame"){
                 setSelectedElement(e.target);
-                
+
                 if(e.type === "contextmenu"){
                     if(contextMenuEnabled === false){
                         openContextMenu(true);
@@ -227,11 +227,11 @@ export default function LandingPage(){
                         positionToAdd = x - timelineObjects.offsetWidth;
                     }
     
-                    keyFrameToAdd.style.left = positionToAdd - 10 + "px";
+                    keyFrameToAdd.style.left = positionToAdd - 15 + "px";
                     e.target.appendChild(keyFrameToAdd);
 
                     const animData = {
-                        [`affectedObject${e.target.id}`]: {
+                        'affectedObject': {
                             'affectedObjectID': e.target.id,
                             'affectedProperty': {
                                 'name': "",
@@ -253,12 +253,14 @@ export default function LandingPage(){
     function deleteSelectedElement(event){
         if(event === "contextmenu"){
             if(selectedElement !== "" && selectedElement !== null && selectedElement !== undefined){
+                animationData.splice(parseInt(selectedElement.id.toString().substring(8, 9)) - 1, 1);
                 selectedElement.remove();
             }
         }
 
         if(event.key === 'Del' || event.key === 'Delete' || event.keyCode === 46){
             if(selectedElement !== "" && selectedElement !== null && selectedElement !== undefined){
+                animationData.splice(parseInt(selectedElement.id.toString().substring(8, 9)) - 1, 1);
                 selectedElement.remove();
             }
         }
@@ -276,12 +278,16 @@ export default function LandingPage(){
             lastElementID = "1";
         }
 
-        line.innerHTML = "Objeto " + lastElementID;
+        line.innerHTML = "Objeto " + lastElementID + " > Posição X, Y";
         line.className = "timelineObject";
         line.id = "objeto" + lastElementID;
 
         timelineObjectsList.appendChild(line);
         setArrayDeObjetos(Array.apply(null, Array(timelineObjectsList.childElementCount)));
+    }
+
+    function defineData(){
+        console.log(animationData)
     }
 
     function playAnim(){
@@ -307,12 +313,14 @@ export default function LandingPage(){
         <div className="wrapDiv">
             { contextMenuEnabled ? 
                 <div className="contextMenu" id="contextMenu">
-                    <button className="contextMenuButton" onClick={e => deleteSelectedElement("contextmenu")}> <FaTrash size={"1.8vh"} color={"#999"}/> <h1 className="contextMenuButtonText">Excluir</h1></button>
+                    <button className="contextMenuButton" onClick={e => deleteSelectedElement("contextmenu")}> <HiOutlineTrash size={"2.8vh"}/> <h1 className="contextMenuButtonText">Remover Keyframe</h1></button>
                 </div> :
                  ""
             }
-            <div id="dragContainer">
-                <div className="exampleItem" id="itemToDrag"></div>
+            <div className="userPageWrap" id="userPageWrap">
+                <div className="userPage">
+                    <div className="exampleItem" id="itemToDrag"></div>
+                </div>
             </div>
             <section className="timelineSection">
                 <div className="timelineWrap">
@@ -325,12 +333,14 @@ export default function LandingPage(){
                                 </button>
                                 <button onClick={playAnim} className="timelineOptionsPlayButton">
                                     <FaPlay className="timelineOptionsPlay" color="#ffffff"/>
-                                    Play
+                                    PLAY
                                 </button>
                             </div>
+                            <div className="timelineOptionsAddField">
                                 <button onClick={addObject} className="timelineOptionsAddButton">
-                                    <FaPlus className="timelineOptionsAdd" color="#20A4F3"/>
+                                    <FaPlus className="timelineOptionsAdd"/>
                                 </button>
+                            </div>
                             <div className="timelineOptionsRuler">
                                 <h1 className="timelineOptionsRulerLabel">Segundos: </h1>
                             </div>

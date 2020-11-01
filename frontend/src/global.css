@@ -16,31 +16,37 @@ body{
 
 .contextMenu{
     background-color: #ffffff;
-    box-shadow: 0 .3vh .6vh .3vh #0000002a;
+    box-shadow: 0 .3vh 1vh .3vh #00000041;
     display: grid;
-    height: 4vh;
+    height: 5vh;
     position: absolute;
     z-index: 100;
 }
 
 .contextMenuButton{
+    background-color: #ffffff;
+    color: #888888;
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: minmax(0, 4vh) auto;
+    grid-template-columns: minmax(0, 5vh) auto;
     align-items: center;
     justify-items: center;
 }
 
+.contextMenuButton svg{
+    stroke: #000000;
+}
+
 .contextMenuButtonText{
     width: 100%;
-    padding-left: 1vh;
-    margin-right: 1vh;
+    padding-left: 3vh;
+    margin-right: 5vh;
     text-align: left;
 }
 
 .contextMenuButton:hover{
-    background-color: #e9e9e9;
+    background-color: #ebebeb;
 }
 
 ::-webkit-scrollbar {
@@ -49,13 +55,10 @@ body{
 }
 
 ::-webkit-scrollbar-track {
-    background-color: #a4b0b4;
-}
- 
-::-webkit-scrollbar-thumb {
-    background: #5c6f7766;
+    background-color: #e4e4e4;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #5c6f7766;
+    background: #c0c0c0;
+    cursor: pointer;
 }

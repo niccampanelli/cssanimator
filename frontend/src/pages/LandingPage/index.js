@@ -19,7 +19,69 @@ export default function LandingPage(){
     window.addEventListener("keyup", deleteSelectedElement, true);
 
     window.onload = () => {
+
+        var clicks = 0;
+        var positionToAdd = 0;
         
+        function watchKeyframe(e){
+            clicks ++;
+            const keyFrameToAdd = document.createElement("div");
+
+            const keyframesCount = document.querySelectorAll('.keyFrame').length;
+
+            keyFrameToAdd.className = "keyFrame";
+            keyFrameToAdd.id = `keyFrame${keyframesCount + 1}`;
+            keyFrameToAdd.draggable = "false";
+
+            if(e.target.id.toString().substring(0, 8) === "keyFrame"){
+                setSelectedElement(e.target);
+
+                if(e.type === "contextmenu"){
+                    if(contextMenuEnabled === false){
+                        openContextMenu(true);
+                        const contextMenu = document.getElementById("contextMenu");
+                        contextMenu.style.left = e.target.getBoundingClientRect().left + (e.target.offsetHeight/2) + "px";
+                        contextMenu.style.top = e.target.getBoundingClientRect().top + (e.target.offsetWidth/2) + "px";
+    
+                        document.addEventListener('mouseup', enableContextMenu, false);
+                        
+                        function enableContextMenu() {
+                            setTimeout(() => {
+                                openContextMenu(false);
+                            }, 10);
+
+                            document.removeEventListener('mouseup', enableContextMenu, false);
+                        }
+
+                    }
+
+                    e.preventDefault();
+                }
+
+            }
+
+            if(clicks === 2){
+                if(e.target.className === "timelineObject"){
+                    if (e.type === "touchstart") {
+                        var xTouch = e.touches[0].clientX - e.target.offsetLeft + timelineSheet.scrollLeft;
+                        positionToAdd = xTouch - timelineObjects.offsetWidth;
+                    } else {
+                        var x = e.clientX - e.target.offsetLeft + timelineSheet.scrollLeft;
+                        positionToAdd = x - timelineObjects.offsetWidth;
+                    }
+    
+                    keyFrameToAdd.style.left = positionToAdd - 15 + "px";
+                    e.target.appendChild(keyFrameToAdd);
+
+                    defineData(e, positionToAdd);
+                }
+            }
+
+            setTimeout(() => {
+                clicks = 0;
+            }, 500);
+        }
+
         const screenWidth = window.screen.width;
 
         const timeline = document.querySelector(".timeline");
@@ -177,77 +239,6 @@ export default function LandingPage(){
         timelineSheetObjects.addEventListener("touchstart", watchKeyframe, false);
         timelineSheetObjects.addEventListener("contextmenu", watchKeyframe, false);
 
-        var clicks = 0;
-        var positionToAdd = 0;
-
-        function watchKeyframe(e){
-            clicks ++;
-            const keyFrameToAdd = document.createElement("div");
-
-            const keyframesCount = document.querySelectorAll('.keyFrame').length;
-
-            keyFrameToAdd.className = "keyFrame";
-            keyFrameToAdd.id = `keyFrame${keyframesCount + 1}`;
-            keyFrameToAdd.draggable = "false";
-
-            if(e.target.id.toString().substring(0, 8) === "keyFrame"){
-                setSelectedElement(e.target);
-
-                if(e.type === "contextmenu"){
-                    if(contextMenuEnabled === false){
-                        openContextMenu(true);
-                        const contextMenu = document.getElementById("contextMenu");
-                        contextMenu.style.left = e.target.getBoundingClientRect().left + (e.target.offsetHeight/2) + "px";
-                        contextMenu.style.top = e.target.getBoundingClientRect().top + (e.target.offsetWidth/2) + "px";
-    
-                        document.addEventListener('mouseup', enableContextMenu, false);
-                        
-                        function enableContextMenu() {
-                            setTimeout(() => {
-                                openContextMenu(false);
-                            }, 10);
-
-                            document.removeEventListener('mouseup', enableContextMenu, false);
-                        }
-
-                    }
-
-                    e.preventDefault();
-                }
-
-            }
-
-            if(clicks === 2){
-                if(e.target.className === "timelineObject"){
-                    if (e.type === "touchstart") {
-                        var xTouch = e.touches[0].clientX - e.target.offsetLeft + timelineSheet.scrollLeft;
-                        positionToAdd = xTouch - timelineObjects.offsetWidth;
-                    } else {
-                        var x = e.clientX - e.target.offsetLeft + timelineSheet.scrollLeft;
-                        positionToAdd = x - timelineObjects.offsetWidth;
-                    }
-    
-                    keyFrameToAdd.style.left = positionToAdd - 15 + "px";
-                    e.target.appendChild(keyFrameToAdd);
-
-                    const animData = {
-                        'affectedObject': {
-                            'affectedObjectID': e.target.id,
-                            'affectedProperty': {
-                                'name': "",
-                                'value': 0
-                            },
-                            'time': positionToAdd/100
-                        }
-                    };
-                    setAnimationDataValues(animationData => [...animationData, animData]);
-                }
-            }
-
-            setTimeout(() => {
-                clicks = 0;
-            }, 500);
-        }
     }
 
     function deleteSelectedElement(event){
@@ -286,12 +277,23 @@ export default function LandingPage(){
         setArrayDeObjetos(Array.apply(null, Array(timelineObjectsList.childElementCount)));
     }
 
-    function defineData(){
-        console.log(animationData)
+    function defineData(e, positionToAdd){
+        const animData = {
+            'affectedObject': {
+                'affectedObjectID': e.target.id,
+                'affectedProperty': {
+                    'name': "",
+                    'value': 0
+                },
+                'time': positionToAdd/100
+            }
+        };
+        
+        setAnimationDataValues(animationData => [...animationData, animData]);
     }
 
     function playAnim(){
-        console.log(animationData);
+        console.log(animationData)
     }
 
     //async function sendData(e){
